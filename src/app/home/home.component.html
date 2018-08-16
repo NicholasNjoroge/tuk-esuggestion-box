@@ -1,0 +1,312 @@
+<!--Navigation Bar-->
+<nav class="navbar navbar-expand navbar-dark bg-dark"O>
+  <div class="container">
+    <a href="index.html" class="navbar-brand">TU-K E-SUGGESTION BOX</a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <ul class="navbar-nav mr-auto ml-auto">
+        <a routerLink="" class="nav-item active nav-link">Home</a>
+        <a routerLink="/about-us" class="nav-item active nav-link">About Us</a>
+        <a routerLink="/contact-us" class="nav item active nav-link">Contact Us</a>
+        <li class="nav-item  dropdown">
+          <a href="#" class="nav-link dropdown-toggle active" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a *ngIf="postNow" href="#" class="dropdown-item" (click)="logout()">Logout</a>
+            <a *ngIf="postNow === false" href="#" class="dropdown-item" data-toggle="modal" data-target="#login">Login</a>
+          </div>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+<!--Body-->
+<div class="container">
+  <!--Post suggestion button-->
+  <flash-messages></flash-messages>
+  <div class="row">
+    <div class="col-lg-4">
+
+    </div>
+    <div class="col-lg-4">
+
+    </div>
+    <div class="col-lg-4">
+      <button style="margin: 50px" type="button" class="btn btn-primary" (click)="postSuggestion()" data-toggle="modal" data-target="#login"><i class="fas fa-notes-medical"></i> POST SUGGESTION</button>
+    </div>
+  </div>
+  <!--Sign Up Modal-->
+  <div *ngIf="!loggedIn"  class="modal fade" id="login" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Tabs -->
+          <div class="jr_profile_tab_bay">
+            <li [class.active]="tab=='active'" (click)="tab_swap('active')">LOGIN</li>
+            <li [class.active]="tab=='inactive'" (click)="tab_swap('inactive')">REGISTER</li>
+            <div class="jr_clear"></div>
+          </div>
+
+          <div class="jr_profile_tab_content" [hidden]="tab=='inactive'">
+            <!--Sign In-->
+            <br>
+            <form action="">
+              <!--Email-->
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Email" name="email" [(ngModel)]="user.email" >
+              </div>
+
+              <!--Password-->
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-unlock-alt"></i></span>
+                </div>
+                <input type="password" class="form-control" placeholder="Password" name="password" [(ngModel)]="user.password">
+              </div>
+
+              <!--Submit Button-->
+              <button class="btn btn-primary btn-block" data-dismiss="modal" (click)="login(user)">LOGIN</button>
+            </form>
+          </div>
+          <div class="jr_profile_tab_content" [hidden]="tab=='active'">
+            <!--Sign Up-->
+            <br>
+            <form #signup="ngForm">
+              <!--Sign Up As-->
+              <label>Sign Up As:</label>
+              <div class="input-group mb-3">
+                <select class="custom-select" id="category" name="category" [(ngModel)]="user.category">
+                  <option value="Student">Student</option>
+                  <option value="Teaching Staff">Teaching Staff</option>
+                  <option value="General Worker">General Worker</option>
+                  <!--<option value="Admin"></option>-->
+                </select>
+              </div>
+
+              <!--STUDENT-->
+              <!--Name-->
+              <label>Name</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="name" [(ngModel)]="user.name" required>
+              </div>
+
+              <!--ID NO-->
+              <label>National ID No:</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="idNo" [(ngModel)]="user.idNo" required>
+              </div>
+
+              <!--Phone No-->
+              <label>Phone No:</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="phoneNo" [(ngModel)]="user.phoneNo" required>
+              </div>
+
+              <!--Email-->
+              <label>Email Address:</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="email" name="email" [(ngModel)]="user.email" required>
+              </div>
+
+              <!--Reg No-->
+              <label *ngIf="user.category === 'Student'">Registration No:</label>
+              <div *ngIf="user.category === 'Student'" class="input-group mb-3">
+                <input type="text" class="form-control" id="regNo" name="regNo" [(ngModel)]="student.regNo" >
+              </div>
+
+              <!--Course-->
+              <label *ngIf="user.category === 'Student'">Course:</label>
+              <div *ngIf="user.category === 'Student'" class="input-group mb-3">
+                <input type="text" class="form-control" id="course" name="course" [(ngModel)]="student.course" >
+              </div>
+
+              <!--Faculty-->
+              <label *ngIf="user.category === 'Student'" >Faculty:</label>
+              <div *ngIf="user.category === 'Student'" class="input-group mb-3">
+                <select class="custom-select" id="faculty-student" name="faculty" [(ngModel)]="student.faculty">
+                  <option value="" disabled>Faculty of Applied Sciences and Technology</option>
+                  <option value="School of Biological and Life Sciences">School of Biological and Life Sciences</option>
+                  <option value="School of Physical Sciences and Technology">School of Physical Sciences and Technology</option>
+                  <option value="School of Computing and Information Technology">School of Computing and Information Technology</option>
+                  <option value="School of Health Sciences and Technology">School of Health Sciences and Technology</option>
+                  <option value="School of Mathematics and Statistics">School of Mathematics and Statistics</option>
+                  <option value="Center of Science and Technology Studies">Center of Science and Technology Studies</option>
+                  <option value="" disabled>Faculty of Social and Technology</option>
+                  <option value="School of Business and Management">School of Business and Management</option>
+                  <option value="School of Creative Arts and Technologies">School of Creative Arts and Technologies</option>
+                  <option value="School of Hospitality and Tourism Studies">School of Hospitality and Tourism Studies</option>
+                  <option value="School of Information and Communication Studies">School of Information and Communication Studies</option>
+                  <option value="School of Social and Development Studies">School of Social and Development Studies</option>
+                  <option value="Centre for Creative and Cultural Industries">Centre for Creative and Cultural Industries</option>
+                  <option value="" disabled>Faculty of Engineering Sciences and Technology</option>
+                  <option value="School of Electrical and Electronic Engineering">School of Electrical and Electronic Engineering</option>
+                  <option value="School of Architecture and the Built Environment">School of Architecture and the Built Environment</option>
+                  <option value="School of Infrastructure and Resource Engineering">School of Infrastructure and Resource Engineering</option>
+                  <option value="School of Mechanical and Process Engineering">School of Mechanical and Process Engineering</option>
+                  <option value="School of Surveying and Geospatial Sciences">School of Surveying and Geospatial Sciences</option>
+                  <option value="Centre for Engineering Innovation and Production">Centre for Engineering Innovation and Production</option>
+                </select>
+              </div>
+
+              <!--Residence-->
+              <label *ngIf="user.category === 'Student'">Area of Residence:</label>
+              <div *ngIf="user.category === 'Student'" class="input-group mb-3">
+                <input type="text" class="form-control" id="residence" name="residence" [(ngModel)]="student.residence" >
+              </div>
+
+              <!--TEACHING STAFF-->
+              <!--Faculty-->
+              <label *ngIf="user.category === 'Teaching Staff'">Faculty:</label>
+              <div *ngIf="user.category === 'Teaching Staff'" class="input-group mb-3">
+                <select class="custom-select" id="faculty-staff" name="faculty" [(ngModel)]="staff.faculty">
+                  <option value="" disabled><strong>Faculty of Applied Sciences and Technology</strong></option>
+                  <option value="School of Biological and Life Sciences">School of Biological and Life Sciences</option>
+                  <option value="School of Physical Sciences and Technology">School of Physical Sciences and Technology</option>
+                  <option value="School of Computing and Information Technology">School of Computing and Information Technology</option>
+                  <option value="School of Health Sciences and Technology">School of Health Sciences and Technology</option>
+                  <option value="School of Mathematics and Statistics">School of Mathematics and Statistics</option>
+                  <option value="Center of Science and Technology Studies">Center of Science and Technology Studies</option>
+                  <option value="" disabled>Faculty of Social and Technology</option>
+                  <option value="School of Business and Management">School of Business and Management</option>
+                  <option value="School of Creative Arts and Technologies">School of Creative Arts and Technologies</option>
+                  <option value="School of Hospitality and Tourism Studies">School of Hospitality and Tourism Studies</option>
+                  <option value="School of Information and Communication Studies">School of Information and Communication Studies</option>
+                  <option value="School of Social and Development Studies">School of Social and Development Studies</option>
+                  <option value="Centre for Creative and Cultural Industries">Centre for Creative and Cultural Industries</option>
+                  <option value="" disabled>Faculty of Engineering Sciences and Technology</option>
+                  <option value="School of Electrical and Electronic Engineering">School of Electrical and Electronic Engineering</option>
+                  <option value="School of Architecture and the Built Environment">School of Architecture and the Built Environment</option>
+                  <option value="School of Infrastructure and Resource Engineering">School of Infrastructure and Resource Engineering</option>
+                  <option value="School of Mechanical and Process Engineering">School of Mechanical and Process Engineering</option>
+                  <option value="School of Surveying and Geospatial Sciences">School of Surveying and Geospatial Sciences</option>
+                  <option value="Centre for Engineering Innovation and Production">Centre for Engineering Innovation and Production</option>
+                </select>
+              </div>
+
+              <!--GENERAL WORKERS-->
+              <label *ngIf="user.category === 'General Worker'">Job Title:</label>
+              <div *ngIf="user.category === 'General Worker'" class="input-group mb-3">
+                <input type="text" class="form-control" name="jobtitle" [(ngModel)]="generalWorker.jobtitle" >
+              </div>
+
+              <!--Password-->
+              <label>Password:</label>
+              <div class="input-group mb-3">
+                <input type="password" class="form-control" minlength="6" name="password" id="password" [(ngModel)]="user.password">
+              </div>
+
+              <!--Submit Button-->
+              <button class="btn btn-primary btn-block" [disabled]="signup.form.invalid" data-dismiss="modal" (click)="signUp(user)">SIGN UP</button>
+            </form>
+          </div>
+        </div>
+        <!--<div class="modal-footer">-->
+          <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+          <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+        <!--</div>-->
+      </div>
+    </div>
+  </div>
+
+  <!--Post A suggestion-->
+  <div *ngIf="postNow" class="postcard">
+    <div class="card">
+      <div class="card-header">
+        POST YOUR COMPLAIN
+      </div>
+      <flash-messages></flash-messages>
+      <div class="card-body">
+        <!--Post Form comes in here-->
+        <form action="">
+          <!--Sign Up As-->
+          <label for="postcategory">Post Complain as:</label>
+          <div class="input-group mb-3">
+            <select class="custom-select" id="postcategory" name="category" [(ngModel)]="suggestion.category" required>
+              <option value="Student">Student</option>
+              <option value="Teaching Staff">Teaching Staff</option>
+              <option value="General Worker">General Worker</option>
+              <!--<option value="Admin"></option>-->
+            </select>
+          </div>
+          <!--Complain/Suggestion Title-->
+          <label for="posttitle">Title:</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="posttitle"  name="complain" [(ngModel)]="suggestion.title" required>
+          </div>
+
+
+          <div class="row">
+            <div class="col-lg-6">
+              <!--The complainant-->
+              <label>The Complainant:</label>
+              <div class="mb-3 aye">
+                <input type="text" class="form-control" name="complainant" [(ngModel)]="suggestion.complainant">
+                <small style="font-weight: lighter; font-style: italic">Leave blank incase of anonymity</small>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <!--The complain is addressed to-->
+              <label>Addressed To:</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="complain" [(ngModel)]="suggestion.addressedTo" required>
+              </div>
+            </div>
+          </div>
+
+          <!--The complain itself-->
+          <label>Complain/Suggestion:</label>
+          <div class="input-group mb-3">
+            <textarea type="text" class="form-control" placeholder="Complain / Suggestion" name="complain" [(ngModel)]="suggestion.complaint" required></textarea>
+          </div>
+
+          <!--Submit Button-->
+          <button class="btn btn-primary btn-block" data-dismiss="modal" (click)="submitSuggestion(suggestion)">SUBMIT COMPLAIN/SUGGESTION</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!--Show Suggestions-->
+  <div class="viewcard">
+    <div class="row">
+      <div class="col-lg-6" style="padding: 20px;" *ngFor="let suggestion of suggestions">
+        <div class="card" >
+          <div class="card-header" style="background: lightblue">
+            {{suggestion.createdAt | date: 'fullDate'}}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title" id="title"> <span style="font-weight: bolder">Title:</span> {{suggestion.title}}</h5>
+            <h6> <span style="font-weight: bolder">Addressed To:</span> {{suggestion.addressedTo}}</h6>
+            <p> <span style="font-weight: bolder">Complain/Suggestion:</span> {{suggestion.complaint}}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-lg-6">
+                <h6 *ngIf="suggestion.complainant != '' && suggestion.complainant != null"> <span>By:</span> {{suggestion.complainant}} </h6>
+
+                <h6 *ngIf="suggestion.complainant == null || suggestion.complainant == ''  "> <span>By:</span> Anonymous </h6>
+              </div>
+
+              <div class="col-lg-6">
+                <span style="font-weight: bolder">Addressed:</span> {{suggestion.addressed}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
